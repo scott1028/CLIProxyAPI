@@ -122,12 +122,12 @@ func TestShortRequestID(t *testing.T) {
 		{
 			name:  "uuid v7 36 chars",
 			input: "018f3a5b-1234-7abc-def0-12345678abcd",
-			want:  "5678abcd",
+			want:  "018f3a5b",
 		},
 		{
 			name:  "uuid v7 with trailing whitespace",
 			input: " 018f3a5b-1234-7abc-def0-12345678abcd \n",
-			want:  "5678abcd",
+			want:  "018f3a5b",
 		},
 	}
 

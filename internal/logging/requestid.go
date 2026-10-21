@@ -37,12 +37,13 @@ func GenerateRequestIDFromReader(r io.Reader) (string, error) {
 	return id.String(), nil
 }
 
-// ShortRequestID returns the trailing 8 characters of a request ID.
+// ShortRequestID returns the leading 8 characters of a request ID, matching the
+// first UUID group so short IDs line up with the full ID when scanning logs.
 // If requestID is 8 characters or shorter, it returns it unchanged.
 func ShortRequestID(requestID string) string {
 	requestID = strings.TrimSpace(requestID)
 	if len(requestID) > 8 {
-		return requestID[len(requestID)-8:]
+		return requestID[:8]
 	}
 	return requestID
 }
