@@ -48,7 +48,7 @@ func (e *MetaExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth.Aut
 	applyMetaAPIHeaders(httpReq, enriched, token, true, opts.Headers)
 	e.recordMetaRequest(ctx, enriched, url, httpReq.Header.Clone(), prepared.body)
 
-	httpClient := helps.NewProxyAwareHTTPClient(ctx, e.cfg, enriched, 0)
+	httpClient := helps.NewProxyAwareHTTPClient(ctx, e.cfg, enriched, metaUpstreamTimeout)
 	httpClient = reporter.TrackHTTPClientRoundTripOnly(httpClient)
 	httpResp, errDo := httpClient.Do(httpReq)
 	if errDo != nil {

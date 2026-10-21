@@ -26,6 +26,9 @@ var metaRefreshGroup singleflight.Group
 
 const metaUserAgent = "muse-build/1.3.0 (interactive; macos-aarch64; build ac7280f2aca67769d1455a8847bb502b617d50f6)"
 
+// metaUpstreamTimeout caps each upstream call so a stalled Meta connection cannot pin a request forever.
+const metaUpstreamTimeout = 3 * time.Minute
+
 // MetaExecutor implements the cliproxyauth.ProviderExecutor for Meta Muse models (api.meta.ai).
 type MetaExecutor struct {
 	cfg *config.Config
