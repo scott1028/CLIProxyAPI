@@ -1118,6 +1118,7 @@ func (e *KimiExecutor) Refresh(ctx context.Context, auth *cliproxyauth.Auth) (*c
 	}
 	now := time.Now().Format(time.RFC3339)
 	auth.Metadata["last_refresh"] = now
+	log.Debugf("kimi executor: refresh complete for %s, metadata=%+v", auth.ID, auth.Metadata)
 	return auth, nil
 }
 
