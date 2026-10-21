@@ -21,7 +21,7 @@ func SetProxy(cfg *config.SDKConfig, httpClient *http.Client) *http.Client {
 
 	transport, _, errBuild := proxyutil.BuildHTTPTransport(cfg.ProxyURL)
 	if errBuild != nil {
-		log.Errorf("%v", errBuild)
+		log.Errorf("set proxy %s: %v", proxyutil.Redact(cfg.ProxyURL), errBuild)
 	}
 	if transport != nil {
 		httpClient.Transport = transport
