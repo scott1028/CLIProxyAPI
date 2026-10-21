@@ -6,7 +6,11 @@ import (
 	"image"
 	"image/draw"
 	"image/png"
+	"sync"
 )
+
+// whiteImageCache stores encoded placeholders by size; only a few sizes exist.
+var whiteImageCache sync.Map
 
 func CreateWhiteImageBase64(aspectRatio string) (string, error) {
 	width := 1024
@@ -45,6 +49,11 @@ func CreateWhiteImageBase64(aspectRatio string) (string, error) {
 		height = 672
 	}
 
+	size := image.Pt(width, height)
+	if cached, ok := whiteImageCache.Load(size); ok {
+		return cached.(string), nil
+	}
+
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	draw.Draw(img, img.Bounds(), image.White, image.Point{}, draw.Src)
 
@@ -55,5 +64,6 @@ func CreateWhiteImageBase64(aspectRatio string) (string, error) {
 	}
 
 	base64String := base64.StdEncoding.EncodeToString(buf.Bytes())
+	whiteImageCache.Store(size, base64String)
 	return base64String, nil
 }
