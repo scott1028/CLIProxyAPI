@@ -51,11 +51,7 @@ func (m *Manager) Authenticate(ctx context.Context, r *http.Request) (*Result, *
 		return nil, nil
 	}
 
-	var (
-		missing bool
-		invalid bool
-	)
-
+	invalid := false
 	for _, provider := range providers {
 		if provider == nil {
 			continue
@@ -64,11 +60,7 @@ func (m *Manager) Authenticate(ctx context.Context, r *http.Request) (*Result, *
 		if authErr == nil {
 			return res, nil
 		}
-		if IsAuthErrorCode(authErr, AuthErrorCodeNotHandled) {
-			continue
-		}
-		if IsAuthErrorCode(authErr, AuthErrorCodeNoCredentials) {
-			missing = true
+		if IsAuthErrorCode(authErr, AuthErrorCodeNotHandled) || IsAuthErrorCode(authErr, AuthErrorCodeNoCredentials) {
 			continue
 		}
 		if IsAuthErrorCode(authErr, AuthErrorCodeInvalidCredential) {
@@ -78,11 +70,9 @@ func (m *Manager) Authenticate(ctx context.Context, r *http.Request) (*Result, *
 		return nil, authErr
 	}
 
+	// Invalid credentials take precedence; otherwise report missing credentials.
 	if invalid {
 		return nil, NewInvalidCredentialError()
-	}
-	if missing {
-		return nil, NewNoCredentialsError()
 	}
 	return nil, NewNoCredentialsError()
 }

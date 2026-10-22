@@ -47,6 +47,10 @@ func GetBytes(ctx context.Context, client Doer, requestURL string, headers map[s
 		return nil, fmt.Errorf("unexpected status %d: %s", resp.StatusCode, strings.TrimSpace(string(body)))
 	}
 
+	if maxSize > 0 && resp.ContentLength > maxSize {
+		return nil, fmt.Errorf("response exceeds maximum allowed size of %d bytes", maxSize)
+	}
+
 	reader := io.Reader(resp.Body)
 	if maxSize > 0 {
 		reader = io.LimitReader(resp.Body, maxSize+1)

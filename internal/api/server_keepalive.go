@@ -75,12 +75,7 @@ func (s *Server) watchKeepAlive() {
 			}
 			return
 		case <-s.keepAliveHeartbeat:
-			if !timer.Stop() {
-				select {
-				case <-timer.C:
-				default:
-				}
-			}
+			// Since Go 1.23, Reset drops any pending tick, so no manual drain is needed.
 			timer.Reset(s.keepAliveTimeout)
 		case <-s.keepAliveStop:
 			return

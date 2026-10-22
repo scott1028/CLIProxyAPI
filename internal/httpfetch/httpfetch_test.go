@@ -65,3 +65,22 @@ func TestGetBytesEnforcesMaxSize(t *testing.T) {
 		t.Fatalf("GetBytes() error = %v, want size limit error", errGet)
 	}
 }
+
+func TestGetBytesRejectsDeclaredOversizedBodyBeforeReading(t *testing.T) {
+	t.Parallel()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		// Declare a large body but send only a few bytes; reading it would fail with unexpected EOF.
+		w.Header().Set("Content-Length", "1048576")
+		_, _ = w.Write([]byte("0123456789"))
+	}))
+	t.Cleanup(server.Close)
+
+	_, errGet := GetBytes(context.Background(), server.Client(), server.URL, nil, 1024)
+	if errGet == nil {
+		t.Fatal("GetBytes() error = nil")
+	}
+	if !strings.Contains(errGet.Error(), "maximum allowed size") {
+		t.Fatalf("GetBytes() error = %v, want size limit error", errGet)
+	}
+}
