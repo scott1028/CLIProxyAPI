@@ -668,7 +668,7 @@ func TestRequestLoggingMiddleware_PreservesFullUUIDForLoggerAndTruncatesFilename
 		t.Fatalf("expected 1 log file on disk, got %d", len(entries))
 	}
 	fileName := entries[0].Name()
-	expectedShortID := spy.lastLogRequestID[:8]
+	expectedShortID := spy.lastLogRequestID[len(spy.lastLogRequestID)-8:]
 	expectedSuffix := "-" + expectedShortID + ".log"
 	if !strings.HasSuffix(fileName, expectedSuffix) {
 		t.Fatalf("filename %q does not end with expected short suffix %q", fileName, expectedSuffix)

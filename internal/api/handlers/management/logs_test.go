@@ -922,7 +922,7 @@ func TestGetRequestLogByID_MatchesFullUUIDAndShortID(t *testing.T) {
 	dir := t.TempDir()
 	h := newLogsTestHandler(dir, true)
 
-	logPath := filepath.Join(dir, "v1_chat_completions-2026-09-28T100000-018f3a5b.log")
+	logPath := filepath.Join(dir, "v1_chat_completions-2026-09-28T100000-1234abcd.log")
 	if errWrite := os.WriteFile(logPath, []byte("uuid v7 request log content"), 0o644); errWrite != nil {
 		t.Fatalf("write log: %v", errWrite)
 	}
@@ -930,8 +930,8 @@ func TestGetRequestLogByID_MatchesFullUUIDAndShortID(t *testing.T) {
 	// 1. Fetch via short 8-char ID
 	recShort := httptest.NewRecorder()
 	cShort, _ := gin.CreateTestContext(recShort)
-	cShort.Params = gin.Params{{Key: "id", Value: "018f3a5b"}}
-	cShort.Request = httptest.NewRequest(http.MethodGet, "/v0/management/logs/request/018f3a5b", nil)
+	cShort.Params = gin.Params{{Key: "id", Value: "1234abcd"}}
+	cShort.Request = httptest.NewRequest(http.MethodGet, "/v0/management/logs/request/1234abcd", nil)
 	h.GetRequestLogByID(cShort)
 
 	if recShort.Code != http.StatusOK {
@@ -941,7 +941,7 @@ func TestGetRequestLogByID_MatchesFullUUIDAndShortID(t *testing.T) {
 		t.Fatalf("body = %q, want %q", body, "uuid v7 request log content")
 	}
 
-	// 2. Fetch via full 36-char UUID string starting with same 8 chars
+	// 2. Fetch via full 36-char UUID string ending with same 8 chars
 	recFull := httptest.NewRecorder()
 	cFull, _ := gin.CreateTestContext(recFull)
 	cFull.Params = gin.Params{{Key: "id", Value: "018f3a5b-1234-7abc-def0-00001234abcd"}}

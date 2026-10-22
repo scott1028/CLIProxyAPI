@@ -251,7 +251,7 @@ func TestConfigureLogOutput_ConcurrentMigration(t *testing.T) {
 func TestLogFormatterFormatsShortRequestID(t *testing.T) {
 	formatter := &LogFormatter{}
 
-	// Test case 1: UUID v7 full string truncated to leading 8 chars in console log
+	// Test case 1: UUID v7 full string truncated to trailing 8 chars in console log
 	entryUUID := log.NewEntry(log.New())
 	entryUUID.Time = time.Date(2026, 9, 28, 12, 0, 0, 0, time.Local)
 	entryUUID.Level = log.InfoLevel
@@ -263,8 +263,8 @@ func TestLogFormatterFormatsShortRequestID(t *testing.T) {
 		t.Fatalf("Format() error = %v", errFormatUUID)
 	}
 	lineUUID := string(formattedUUID)
-	if !strings.Contains(lineUUID, "[018f3a5b]") {
-		t.Fatalf("formatted line %q does not contain expected short request ID [018f3a5b]", lineUUID)
+	if !strings.Contains(lineUUID, "[5678abcd]") {
+		t.Fatalf("formatted line %q does not contain expected short request ID [5678abcd]", lineUUID)
 	}
 	if strings.Contains(lineUUID, "018f3a5b-1234-7abc-def0-12345678abcd") {
 		t.Fatalf("formatted line %q should not contain full UUID", lineUUID)

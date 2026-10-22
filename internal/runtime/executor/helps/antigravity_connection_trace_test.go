@@ -104,7 +104,7 @@ func TestAntigravityConnectionTrace(t *testing.T) {
 		if errString != nil {
 			t.Fatal(errString)
 		}
-		for _, field := range []string{`auth_index="safe-index"`, `upstream_host="127.0.0.1"`, `operation="generate"`, "reused=", "was_idle=", "idle_time=", "test-request-id"[:8]} {
+		for _, field := range []string{`auth_index="safe-index"`, `upstream_host="127.0.0.1"`, `operation="generate"`, "reused=", "was_idle=", "idle_time=", "test-request-id"[len("test-request-id")-8:]} {
 			if !strings.Contains(formatted, field) {
 				t.Fatalf("formatted log missing %q: %s", field, formatted)
 			}

@@ -463,7 +463,7 @@ func TestHomeStreamingLogWriter_CloseTerminatesWhenClientUnhealthy(t *testing.T)
 
 func TestFileRequestLogger_UsesShortRequestIDForLocalAndFullForHome(t *testing.T) {
 	fullUUID := "018f3a5b-1234-7abc-def0-12345678abcd"
-	expectedShortID := "018f3a5b"
+	expectedShortID := "5678abcd"
 
 	// 1. Local file log filename ends with short request ID
 	logsDir := t.TempDir()
